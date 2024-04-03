@@ -225,6 +225,73 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  { 'aaronhallaert/advanced-git-search.nvim', dependencies = { 'tpope/vim-fugitive' } },
+  'https://gitlab.com/HiPhish/rainbow-delimiters.nvim',
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    opts = {},
+    config = function()
+      require('ibl').setup()
+    end,
+  },
+  'mbbill/undotree',
+  'tpope/vim-commentary',
+  'github/copilot.vim',
+  -- Monokai pro themes
+  {
+    'loctvl842/monokai-pro.nvim',
+    opts = {
+      transparent_background = false,
+      terminal_colors = true,
+      devicons = true, -- highlight the icons of `nvim-web-devicons`
+      styles = {
+        comment = { italic = true },
+        keyword = { italic = true }, -- any other keyword
+        type = { italic = true }, -- (preferred) int, long, char, etc
+        storageclass = { italic = true }, -- static, register, volatile, etc
+        structure = { italic = true }, -- struct, union, enum, etc
+        parameter = { italic = true }, -- parameter pass in function
+        annotation = { italic = true },
+        tag_attribute = { italic = true }, -- attribute of tag in reactjs
+      },
+      filter = 'spectrum', -- classic | octagon | pro | machine | ristretto | spectrum
+      -- Enable this will disable filter option
+      day_night = {
+        enable = false, -- turn off by default
+        day_filter = 'pro', -- classic | octagon | pro | machine | ristretto | spectrum
+        night_filter = 'spectrum', -- classic | octagon | pro | machine | ristretto | spectrum
+      },
+      inc_search = 'background', -- underline | background
+      background_clear = {
+        -- "float_win",
+        'toggleterm',
+        'telescope',
+        -- "which-key",
+        'renamer',
+        'notify',
+        -- "nvim-tree",
+        -- "neo-tree",
+        -- "bufferline", -- better used if background of `neo-tree` or `nvim-tree` is cleared
+      }, -- "float_win", "toggleterm", "telescope", "which-key", "renamer", "neo-tree", "nvim-tree", "bufferline"
+      plugins = {
+        bufferline = {
+          underline_selected = false,
+          underline_visible = false,
+        },
+        indent_blankline = {
+          context_highlight = 'default', -- default | pro
+          context_start_underline = false,
+        },
+      },
+    },
+  },
+  'antonk52/coc-cssmodules',
+  --{
+  --  'nvim-lualine/lualine.nvim',
+  --  dependencies = { 'nvim-tree/nvim-web-devicons' },
+  --},
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -354,6 +421,9 @@ require('lazy').setup({
         -- },
         -- pickers = {}
         extensions = {
+          advanced_git_search = {
+            -- See config
+          },
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
@@ -363,6 +433,7 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'advanced_git_search')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -549,7 +620,9 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
-        --
+
+        -- Typescript tools
+        vtsls = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -692,6 +765,7 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<TAB>'] = cmp.mapping.confirm { select = true },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -740,7 +814,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'monokai-pro'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -859,5 +933,12 @@ require('lazy').setup({
   },
 })
 
+-- Needed for commentary
+vim.cmd [[
+  filetype plugin on
+]]
+
+--
+--
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
